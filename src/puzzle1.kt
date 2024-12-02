@@ -4,22 +4,21 @@ import kotlin.math.abs
 data class ListHolder(val one: List<Int>, val two: List<Int>)
 
 fun readFileLineByLineUsingForEachLine(fileName: String): ListHolder {
-    val firstList = mutableListOf<Int>()
-    val secondList = mutableListOf<Int>()
-    File(fileName).forEachLine {
-        val strings = it.split("   ")
-        firstList.add(strings[0].trim().toInt())
-        secondList.add(strings[1].trim().toInt())
-    }
-    firstList.sort()
-    secondList.sort()
-    return ListHolder(firstList, secondList)
+    val lines = File(fileName).readLines()
+
+    val (firstNumbers, secondNumbers) = lines.map { line ->
+        val (first, second) = line.split("   ").map { it.trim().toInt() }
+        Pair(first, second)
+    }.unzip()
+
+    val sortedFirstNumbers = firstNumbers.sorted()
+    val sortedSecondNumbers = secondNumbers.sorted()
+
+    return ListHolder(sortedFirstNumbers, sortedSecondNumbers)
 }
 
 fun getInputData(realData: Boolean): ListHolder {
-    if (realData)
-        return  readFileLineByLineUsingForEachLine("/Users/alexsinclair/IdeaProjects/TCL/AdventOfCode2024/src/puzzle_1_input.txt")
-    return ListHolder(listOf(3, 4, 2, 1, 3, 3), listOf(4,3, 5, 3, 9, 3))
+    return if (realData) readFileLineByLineUsingForEachLine("/Users/alexsinclair/IdeaProjects/TCL/AdventOfCode2024/src/puzzle_1_input.txt") else ListHolder(listOf(3, 4, 2, 1, 3, 3), listOf(4, 3, 5, 3, 9, 3))
 }
 
 fun challengeOne() {
